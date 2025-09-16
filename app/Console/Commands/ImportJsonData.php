@@ -8,7 +8,7 @@ use App\Models\ResearchGrant;
 
 class ImportJsonData extends Command
 {
-    protected $signature = 'add:json {folder}';
+    protected $signature = 'import:json {folder}';
     protected $description = 'Import all JSON files from a folder into research_grants table';
 
     public function handle()

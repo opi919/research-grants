@@ -69,12 +69,12 @@ return new class extends Migration
             $table->timestamps();
 
             // Indexes for better search performance
-            // $table->index(['institution_name', 'city', 'state']);
-            // $table->index(['pi_name']);
-            // $table->index(['title']);
-            // $table->index(['award_amount']);
-            // $table->index(['start_date', 'end_date']);
-            // $table->index(['funding_agency']);
+            $table->index(['institution_name', 'city', 'state']);
+            $table->index(['pi_name']);
+            $table->index(['title']);
+            $table->index(['award_amount']);
+            $table->index(['start_date', 'end_date']);
+            $table->index(['funding_agency']);
         });
     }
 
