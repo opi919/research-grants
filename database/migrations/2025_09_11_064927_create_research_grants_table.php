@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -69,12 +70,12 @@ return new class extends Migration
             $table->timestamps();
 
             // Indexes for better search performance
-            $table->index(['institution_name', 'city', 'state']);
-            $table->index(['pi_name']);
-            $table->index(['title']);
-            $table->index(['award_amount']);
-            $table->index(['start_date', 'end_date']);
-            $table->index(['funding_agency']);
+            $table->index([DB::raw('institution_name(191)'), DB::raw('city(191)'), DB::raw('state(191)')], 'idx_institution_city_state');
+            $table->index([DB::raw('title(191)')], 'idx_title');
+            $table->index([DB::raw('pi_name(191)')], 'idx_pi_name');
+            $table->index([DB::raw('award_amount')], 'idx_award_amount');
+            $table->index([DB::raw('start_date'), DB::raw('end_date')], 'idx_start_date_end_date');
+            $table->index([DB::raw('funding_agency')], 'idx_funding_agency');
         });
     }
 
