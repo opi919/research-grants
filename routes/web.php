@@ -14,11 +14,11 @@ Route::get('/', function () {
 
 Route::get('/login', function () {
     return view('auth.login');
-})->name('login');
+})->middleware('guest')->name('login');
 
 Route::get('/register', function () {
     return view('auth.register');
-})->name('register');
+})->middleware('guest')->name('register');
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,22 +26,22 @@ Route::post('/login', [AuthController::class, 'login']);
 // Protected routes
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     Route::get('/pending', function () {
         return view('auth.pending');
     })->name('pending');
-    
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware('approved')
         ->name('dashboard');
-    
+
     // Search routes - only for approved users
     Route::middleware(['approved', 'single.device'])->group(function () {
         Route::get('/search', [SearchController::class, 'index'])->name('search');
         Route::get('/search/export', [SearchController::class, 'export'])->name('search.export');
         Route::get('/grants/{grant}', [SearchController::class, 'show'])->name('search.show');
     });
-    
+
     // Admin routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [UserManagementController::class, 'index'])->name('users');

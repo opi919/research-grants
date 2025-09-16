@@ -6,29 +6,31 @@
             <h2 class="text-2xl font-bold mb-6">Search Research Grants</h2>
 
             <form method="GET" action="{{ route('search') }}" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Search Term</label>
                         <input type="text" name="q" value="{{ request('q') }}"
                             placeholder="Title, PI, Institution, Abstract..."
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
-
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Institution</label>
                         <input type="text" name="institution" value="{{ request('institution') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">PI Name</label>
                         <input type="text" name="pi" value="{{ request('pi') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">State</label>
-                        <select name="state" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <select name="state"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                             <option value="">All States</option>
                             @foreach ($states as $state)
                                 <option value="{{ $state }}" {{ request('state') === $state ? 'selected' : '' }}>
@@ -40,7 +42,8 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Funding Agency</label>
-                        <select name="agency" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <select name="agency"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                             <option value="">All Agencies</option>
                             @foreach ($agencies as $agency)
                                 <option value="{{ $agency }}" {{ request('agency') === $agency ? 'selected' : '' }}>
@@ -53,25 +56,25 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Award Amount (Min)</label>
                         <input type="number" name="min_amount" value="{{ request('min_amount') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Award Amount (Max)</label>
                         <input type="number" name="max_amount" value="{{ request('max_amount') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Start Date</label>
                         <input type="date" name="start_date" value="{{ request('start_date') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">End Date</label>
                         <input type="date" name="end_date" value="{{ request('end_date') }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
                 </div>
 

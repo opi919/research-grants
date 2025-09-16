@@ -13,7 +13,7 @@
 <body class="bg-gray-100">
     <nav class="bg-blue-600 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Research Grant Database</h1>
+            <h1 class="text-xl font-bold"><a href="/">Research Grant Database</a></h1>
             <div class="flex items-center space-x-4">
                 @auth
                     <span>Welcome, {{ auth()->user()->name }}</span>
