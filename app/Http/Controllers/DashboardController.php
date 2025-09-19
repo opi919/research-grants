@@ -11,11 +11,21 @@ class DashboardController extends Controller
     public function index()
     {
         $stats = [
-            'total_grants' => ResearchGrant::count(),
-            'total_funding' => ResearchGrant::sum('award_amount'),
-            'nih_grants' => ResearchGrant::where('source', 'csv1')->count(),
-            'excel_grants' => ResearchGrant::where('source', 'csv2')->count(),
-            'nsf_grants' => ResearchGrant::where('source', 'json')->count(),
+            'total_grants' => Cache::remember('total_grants', 60, function () {
+                return ResearchGrant::count();
+            }),
+            'total_funding' => Cache::remember('total_funding', 60, function () {
+                return ResearchGrant::sum('award_amount');
+            }),
+            'nih_grants' => Cache::remember('nih_grants', 60, function () {
+                return ResearchGrant::where('source', 'csv1')->count();
+            }),
+            'excel_grants' => Cache::remember('excel_grants', 60, function () {
+                return ResearchGrant::where('source', 'csv2')->count();
+            }),
+            'nsf_grants' => Cache::remember('nsf_grants', 60, function () {
+                return ResearchGrant::where('source', 'json')->count();
+            }),
         ];
 
         $recent_grants = Cache::remember('recent_grants', 60, function () {
