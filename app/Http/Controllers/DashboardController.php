@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ResearchGrant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
@@ -17,14 +18,18 @@ class DashboardController extends Controller
             'nsf_grants' => ResearchGrant::where('source', 'json')->count(),
         ];
 
-        $recent_grants = ResearchGrant::orderBy('created_at', 'desc')
-            ->paginate(10);
+        $recent_grants = Cache::remember('recent_grants', 60, function () {
+            return ResearchGrant::orderBy('created_at', 'desc')
+                ->paginate(10);
+        });
 
-        $top_institutions = ResearchGrant::selectRaw('institution_name, COUNT(*) as grant_count, SUM(award_amount) as total_funding')
-            ->whereNotNull('institution_name')
-            ->groupBy('institution_name')
-            ->orderBy('grant_count', 'desc')
-            ->paginate(10);
+        $top_institutions = Cache::remember('top_institutions', 60, function () {
+            return ResearchGrant::selectRaw('institution_name, COUNT(*) as grant_count, SUM(award_amount) as total_funding')
+                ->whereNotNull('institution_name')
+                ->groupBy('institution_name')
+                ->orderBy('grant_count', 'desc')
+                ->paginate(10);
+        });
 
         return view('dashboard', compact('stats', 'recent_grants', 'top_institutions'));
     }
