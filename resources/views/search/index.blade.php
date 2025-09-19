@@ -84,10 +84,6 @@
                     </button>
 
                     <div class="flex space-x-2">
-                        <a href="{{ route('search.export', request()->query()) }}"
-                            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
-                            Export CSV
-                        </a>
                         <a href="{{ route('search') }}"
                             class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
                             Clear
