@@ -46,7 +46,7 @@
                                     {{ $user->last_login_at ? $user->last_login_at->format('M d, Y H:i') : 'Never' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                    @if ($user->status === 'pending')
+                                    @if ($user->status === 'pending' || $user->status === 'temporary')
                                         <form method="POST" action="{{ route('admin.users.approve', $user) }}"
                                             class="inline">
                                             @csrf
