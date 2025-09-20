@@ -89,7 +89,7 @@
                     </div>
                     <div class="p-6 rounded-2xl border border-slate-200 bg-white">
                         <div class="text-sm text-slate-500">Total Funding</div>
-                        <div class="mt-2 text-3xl font-extrabold">{{ $stats['total_funding'] }}</div>
+                        <div class="mt-2 text-3xl font-extrabold">${{ number_format($stats['total_funding'], 2) }}</div>
                     </div>
                 </div>
             </div>
