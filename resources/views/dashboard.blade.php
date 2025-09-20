@@ -5,7 +5,6 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
 
-            //show a warning if user status is temporary
             @if (auth()->user()->status === 'temporary')
                 <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
                     <p class="font-bold">Account Notice</p>
