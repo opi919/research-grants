@@ -18,6 +18,8 @@ class User extends Authenticatable
         'password',
         'role',
         'status',
+        'phone',
+        'institution',
         'device_fingerprint',
         'last_login_at',
         'last_login_ip',

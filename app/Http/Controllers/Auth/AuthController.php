@@ -32,6 +32,7 @@ class AuthController extends Controller
             'password'            => Hash::make($request->password),
             'status'              => 'temporary',
             'phone'               => $request->phone,
+            'institution'         => $request->institution,
             'device_fingerprint'  => $request->device_fingerprint,
         ]);
 
