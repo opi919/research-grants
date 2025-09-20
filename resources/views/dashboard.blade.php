@@ -5,6 +5,15 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
 
+            //show a warning if user status is temporary
+            @if (auth()->user()->status === 'temporary')
+                <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                    <p class="font-bold">Account Notice</p>
+                    <p>Your account is temporarily active and locked to this device. Please pay one time fee to gain full
+                        access.</p>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-blue-50 rounded-lg p-4">
                     <h3 class="text-lg font-semibold text-blue-800">Total Grants</h3>
