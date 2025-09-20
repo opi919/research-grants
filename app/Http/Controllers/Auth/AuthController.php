@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/Auth/AuthController.php
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -15,11 +14,12 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'institution' => 'required|string|max:255',
-            'purpose' => 'required|string|max:1000',
+            'name'                => 'required|string|max:255',
+            'email'               => 'required|string|email|max:255|unique:users',
+            'password'            => 'required|string|min:8|confirmed',
+            'institution'         => 'nullable|string|max:255',
+            'phone'               => 'required|string|max:13',
+            'device_fingerprint'  => 'required|string|min:16|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -27,22 +27,24 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'status' => 'pending',
+            'name'                => $request->name,
+            'email'               => $request->email,
+            'password'            => Hash::make($request->password),
+            'status'              => 'temporary',
+            'phone'               => $request->phone,
+            'device_fingerprint'  => $request->device_fingerprint,
         ]);
 
         return redirect()->route('login')->with(
             'success',
-            'Registration successful! Your account is pending admin approval.'
+            'Registration successful! Your account is temporarily active and locked to this device.'
         );
     }
 
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
@@ -56,31 +58,37 @@ class AuthController extends Controller
             return back()->withErrors(['password' => 'Invalid password.']);
         }
 
-        if ($user->status !== 'approved') {
-            return back()->withErrors(['email' => 'Your account is not approved yet.']);
+        if ($user->status !== 'approved' && $user->status !== 'temporary') {
+            return back()->withErrors(['email' => 'Your 1-hour free access has expired. Please pay the one time fee to gain full access.']);
         }
 
-        $deviceFingerprint = $this->generateDeviceFingerprint($request);
-
-        // Check if user has active session on different device
-        if ($user->hasActiveSessionOnDifferentDevice($deviceFingerprint)) {
-            return back()->withErrors(['device' =>
-            'You can only access from one device. Please logout from other devices first.']);
+        // 👉 Prefer client fingerprint (stable across IP changes), fallback to server-side hash if missing.
+        $currentFingerprint = $request->input('device_fingerprint') ?: $this->serverSideDeviceHash($request);
+        if (!$user->device_fingerprint) {
+            // For legacy users without a fingerprint yet, you could bind now:
+            $user->device_fingerprint = $currentFingerprint;
+            $user->save();
         }
 
-        // Login the user
+        // 🚫 Enforce single-device: must match the one captured at registration
+        if (!empty($user->device_fingerprint) && hash_equals($user->device_fingerprint, $currentFingerprint) === false) {
+            return back()->withErrors([
+                'device' => 'This account is locked to a different device. Please use the device you registered with or contact support.'
+            ]);
+        }
+
+        // If (for legacy users) no fingerprint was saved yet, you could bind now:
+        // if (empty($user->device_fingerprint)) { $user->device_fingerprint = $currentFingerprint; $user->save(); }
+
         Auth::login($user);
 
-        // Create or update session
-        $user->createSession(
-            $deviceFingerprint,
-            $request->ip(),
-            $request->userAgent()
-        );
+        // Optional: if you still keep a sessions table, mark only this device active
+        if (method_exists($user, 'createSession')) {
+            $user->createSession($currentFingerprint, $request->ip(), $request->userAgent());
+        }
 
-        // Update user login info
+        // Keep last-login metadata (do NOT overwrite device_fingerprint here anymore)
         $user->update([
-            'device_fingerprint' => $deviceFingerprint,
             'last_login_at' => now(),
             'last_login_ip' => $request->ip(),
         ]);
@@ -93,11 +101,13 @@ class AuthController extends Controller
         $user = Auth::user();
 
         if ($user) {
-            // Deactivate current session
-            $deviceFingerprint = $this->generateDeviceFingerprint($request);
-            $user->userSessions()
-                ->where('device_fingerprint', $deviceFingerprint)
-                ->update(['is_active' => false]);
+            // Deactivate current session if you track sessions
+            if (method_exists($user, 'userSessions')) {
+                $currentFingerprint = $request->input('device_fingerprint') ?: $this->serverSideDeviceHash($request);
+                $user->userSessions()
+                    ->where('device_fingerprint', $currentFingerprint)
+                    ->update(['is_active' => false]);
+            }
         }
 
         Auth::logout();
@@ -107,11 +117,14 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    private function generateDeviceFingerprint(Request $request)
+    /**
+     * Fallback server-side hash (less stable than client fingerprint,
+     * but used only if client value is missing).
+     */
+    private function serverSideDeviceHash(Request $request): string
     {
         $components = [
             $request->userAgent(),
-            $request->ip(),
             $request->header('Accept-Language'),
             $request->header('Accept-Encoding'),
         ];

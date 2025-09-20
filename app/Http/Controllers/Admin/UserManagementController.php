@@ -47,6 +47,8 @@ class UserManagementController extends Controller
     public function forceLogout(User $user)
     {
         $user->deactivateAllSessions();
+        $user->device_fingerprint = null;
+        $user->save();
 
         return back()->with('success', 'User logged out from all devices.');
     }

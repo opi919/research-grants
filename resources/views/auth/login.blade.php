@@ -19,6 +19,7 @@
             <input type="password" name="password" 
                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
         </div>
+        <input type="hidden" name="device_fingerprint" value="" id="device_fingerprint">
 
         <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
             Login

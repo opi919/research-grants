@@ -41,6 +41,10 @@ class DashboardController extends Controller
                 ->paginate(10);
         });
 
+        $user = auth()->user();
+        if ($user->status === 'temporary') {
+            session()->flash('warning', 'Your account is temporarily active and locked to this device. Please wait for admin approval for full access.');
+        }
         return view('dashboard', compact('stats', 'recent_grants', 'top_institutions'));
     }
 }

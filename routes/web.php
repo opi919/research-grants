@@ -5,11 +5,24 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DashboardController;
+use App\Models\ResearchGrant;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', function () {
-    return redirect()->route('login');
+    $stats = [
+        'total_grants' => Cache::remember('total_grants', 1, function () {
+            return ResearchGrant::count();
+        }),
+        'total_funding' => Cache::remember('total_funding', 1, function () {
+            return ResearchGrant::sum('award_amount');
+        }),
+        'total_institutions' => Cache::remember('total_institutions', 1, function () {
+            return ResearchGrant::whereNotNull('institution_name')->distinct('institution_name')->count('institution_name');
+        }),
+    ];
+    return view('welcome', compact('stats'));
 });
 
 Route::get('/login', function () {

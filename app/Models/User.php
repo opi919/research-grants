@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function canAccessDatabase()
     {
-        return $this->isApproved() && ($this->isAdmin() || $this->status === 'approved');
+        return $this->isApproved() || $this->isAdmin() || $this->status === 'temporary';
     }
 
     public function userSessions()
