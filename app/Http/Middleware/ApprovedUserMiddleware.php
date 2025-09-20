@@ -9,6 +9,10 @@ class ApprovedUserMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        if (auth()->user()->isAdmin()) {
+            return $next($request);
+        }
+
         if (!auth()->check() || !auth()->user()->canAccessDatabase()) {
             return redirect()->route('pending')->with(
                 'error',

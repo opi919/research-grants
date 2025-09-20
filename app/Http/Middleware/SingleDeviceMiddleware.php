@@ -10,6 +10,10 @@ class SingleDeviceMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        if (auth()->user()->isAdmin()) {
+            return $next($request);
+        }
+
         if (Auth::check()) {
             $user = Auth::user();
             $deviceFingerprint = $this->generateDeviceFingerprint($request);
