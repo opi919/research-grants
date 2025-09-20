@@ -11,29 +11,29 @@ class DashboardController extends Controller
     public function index()
     {
         $stats = [
-            'total_grants' => Cache::remember('total_grants', 60, function () {
+            'total_grants' => Cache::remember('total_grants', 60 * 24, function () {
                 return ResearchGrant::count();
             }),
-            'total_funding' => Cache::remember('total_funding', 60, function () {
+            'total_funding' => Cache::remember('total_funding', 60 * 24, function () {
                 return ResearchGrant::sum('award_amount');
             }),
-            'nih_grants' => Cache::remember('nih_grants', 60, function () {
+            'nih_grants' => Cache::remember('nih_grants', 60 * 24, function () {
                 return ResearchGrant::where('source', 'csv1')->count();
             }),
-            'excel_grants' => Cache::remember('excel_grants', 60, function () {
+            'excel_grants' => Cache::remember('excel_grants', 60 * 24, function () {
                 return ResearchGrant::where('source', 'csv2')->count();
             }),
-            'nsf_grants' => Cache::remember('nsf_grants', 60, function () {
+            'nsf_grants' => Cache::remember('nsf_grants', 60 * 24, function () {
                 return ResearchGrant::where('source', 'json')->count();
             }),
         ];
 
-        $recent_grants = Cache::remember('recent_grants', 60, function () {
+        $recent_grants = Cache::remember('recent_grants', 60 * 24, function () {
             return ResearchGrant::orderBy('created_at', 'desc')
                 ->paginate(10);
         });
 
-        $top_institutions = Cache::remember('top_institutions', 60, function () {
+        $top_institutions = Cache::remember('top_institutions', 60 * 24, function () {
             return ResearchGrant::selectRaw('institution_name, COUNT(*) as grant_count, SUM(award_amount) as total_funding')
                 ->whereNotNull('institution_name')
                 ->groupBy('institution_name')
