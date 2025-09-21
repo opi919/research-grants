@@ -59,6 +59,12 @@ class AuthController extends Controller
             return back()->withErrors(['password' => 'Invalid password.']);
         }
 
+        if ($user->isAdmin()) {
+            // Admins can log in from any device
+            Auth::login($user);
+            return redirect()->intended('/dashboard');
+        }
+
         if ($user->status !== 'approved' && $user->status !== 'temporary') {
             return back()->withErrors(['email' => 'Your 1-hour free access has expired. Please pay the one time fee to gain full access.']);
         }
