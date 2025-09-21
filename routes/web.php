@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::get('/', function () {
     $stats = [
-        'total_grants' => Cache::remember('total_grants', 60 * 24, function () {
+        'total_grants' => Cache::remember('total_grants', 60 * 24 * 30, function () {
             return ResearchGrant::count();
         }),
-        'total_funding' => Cache::remember('total_funding', 60 * 24, function () {
+        'total_funding' => Cache::remember('total_funding', 60 * 24 * 30, function () {
             return ResearchGrant::sum('award_amount');
         }),
-        'total_institutions' => Cache::remember('total_institutions', 60 * 24, function () {
+        'total_institutions' => Cache::remember('total_institutions', 60 * 24 * 30, function () {
             return ResearchGrant::whereNotNull('institution_name')->distinct('institution_name')->count('institution_name');
         }),
     ];
