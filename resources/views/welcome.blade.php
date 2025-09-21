@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>BideshJabo.online — Find Professors & Funding in the USA</title>
+    <title>BideshJabo — Find Professors & Funding in the world</title>
     <meta name="description"
-        content="Explore professors, universities, and funded research projects in the USA. Search by research interest and discover grants.">
+        content="Explore professors, universities, and funded research projects in the world. Search by research interest and discover grants.">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
     <!-- TailwindCSS (CDN for quick start) -->
