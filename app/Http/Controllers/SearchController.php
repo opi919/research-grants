@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\ResearchGrant;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class SearchController extends Controller
 {
@@ -73,8 +74,12 @@ class SearchController extends Controller
         $grants = $query->paginate(20)->withQueryString();
 
         // Get filter options for dropdowns
-        $states = ResearchGrant::distinct()->pluck('state')->filter()->sort();
-        $agencies = ResearchGrant::distinct()->pluck('funding_agency')->filter()->sort();
+        $states = Cache::remember('research_grant_states', 60 * 24 * 30, function () {
+            return ResearchGrant::distinct()->pluck('state')->filter()->sort();
+        });
+        $agencies = Cache::remember('research_grant_agencies', 60 * 24 * 30, function () {
+            return ResearchGrant::distinct()->pluck('funding_agency')->filter()->sort();
+        });
 
         return view('search.index', compact('grants', 'states', 'agencies'));
     }
