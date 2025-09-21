@@ -108,7 +108,7 @@ class ImportCsvData extends Command
             'institution_name' => $data['ORG_NAME'] ?? null,
             'city' => $data['ORG_CITY'] ?? null,
             'state' => $data['ORG_STATE'] ?? null,
-            'zipcode' => $data['ORG_ZIPCODE'] ?? null,
+            'zipcode' => $data['ORG_STATE'] ?? null,
             'country' => $data['ORG_COUNTRY'] ?? null,
             'award_amount' => $data['TOTAL_COST'] ?? null,
             'start_date' => $this->parseDate($data['PROJECT_START'] ?? null),
