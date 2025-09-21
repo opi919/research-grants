@@ -207,11 +207,15 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-200 bg-white">
-        <div class="mx-auto container-narrow px-4 py-10 grid md:grid-cols-2 gap-6">
+        <div class="mx-auto container-narrow  px-4 py-10 grid md:grid-cols-2 gap-6">
             <div>
                 <div class="font-extrabold text-lg">BideshJabo.online</div>
                 <p class="mt-2 text-slate-600">
                     Empowering students to connect with the right professors and research opportunities.
+                </p>
+                <p>
+                    Developed by <a class="text-sky-700 hover:underline hover:text-sky-900"
+                        href="https://www.linkedin.com/in/momen-khandoker-ope/">Momen Khandoker Ope</a>
                 </p>
             </div>
             <div class="md:text-right">
