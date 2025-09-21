@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard');
 
     // Search routes - only for approved users
-    Route::middleware(['approved', 'single.device'])->group(function () {
+    Route::middleware(['approved'])->group(function () {
         Route::get('/search', [SearchController::class, 'index'])->name('search');
         Route::get('/search/export', [SearchController::class, 'export'])->name('search.export');
         Route::get('/grants/{grant}', [SearchController::class, 'show'])->name('search.show');
